@@ -12,15 +12,30 @@ const fetchData = async searchTerm => {
 
 const onInput = async e => {
   const movies = await fetchData(e.target.value);
+  dropdown.classList.add('is-active');
+
   movies.forEach(movie => {
-    const div = document.createElement('div');
-    div.innerHTML = `
+    const link = document.createElement('a');
+    link.classList.add('dropdown-item');
+    link.innerHTML = `
         <img src='${movie.Poster}' />
-        <h1>${movie.Title}</h1>
+        ${movie.Title}
       `;
-    document.querySelector('.search-preview').append(div);
+    results.append(link);
   });
 };
 
-const input = document.querySelector('input');
+const autocomplete = document.querySelector('.autocomplete');
+autocomplete.innerHTML = `
+  <label><b>Search for a Movie</b></label>
+  <input class="input" type="text" />
+  <div class="dropdown">
+    <div class="dropdown-menu">
+      <div class="dropdown-content results"></div>
+    </div>
+  </div>
+`;
+const dropdown = document.querySelector('.dropdown');
+const results = document.querySelector('.results');
+const input = document.querySelector('.input');
 input.addEventListener('input', debounce(onInput, 800));
