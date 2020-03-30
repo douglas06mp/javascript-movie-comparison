@@ -12,13 +12,16 @@ const fetchData = async searchTerm => {
 
 const onInput = async e => {
   const movies = await fetchData(e.target.value);
+
+  results.innerHTML = '';
   dropdown.classList.add('is-active');
 
   movies.forEach(movie => {
     const link = document.createElement('a');
+    const imgSrc = movie.Poster === 'N/A' ? '' : movie.Poster;
     link.classList.add('dropdown-item');
     link.innerHTML = `
-        <img src='${movie.Poster}' />
+        <img src='${imgSrc}' />
         ${movie.Title}
       `;
     results.append(link);
@@ -38,4 +41,4 @@ autocomplete.innerHTML = `
 const dropdown = document.querySelector('.dropdown');
 const results = document.querySelector('.results');
 const input = document.querySelector('.input');
-input.addEventListener('input', debounce(onInput, 800));
+input.addEventListener('input', debounce(onInput, 500));
