@@ -12,6 +12,10 @@ const fetchData = async searchTerm => {
 
 const onInput = async e => {
   const movies = await fetchData(e.target.value);
+  if (!movies.length) {
+    dropdown.classList.remove('is-active');
+    return;
+  }
 
   results.innerHTML = '';
   dropdown.classList.add('is-active');
@@ -42,3 +46,7 @@ const dropdown = document.querySelector('.dropdown');
 const results = document.querySelector('.results');
 const input = document.querySelector('.input');
 input.addEventListener('input', debounce(onInput, 500));
+
+document.addEventListener('click', e => {
+  if (!autocomplete.contains(e.target)) dropdown.classList.remove('is-active');
+});
