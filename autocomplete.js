@@ -46,7 +46,6 @@ const createAutoComplete = ({
 
   input.addEventListener('input', debounce(onInput, 500));
   document.addEventListener('click', e => {
-    if (!autocomplete.contains(e.target))
-      dropdown.classList.remove('is-active');
+    if (!root.contains(e.target)) dropdown.classList.remove('is-active');
   });
 };

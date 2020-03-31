@@ -48,10 +48,7 @@ const movieTemplate = movieDetail => {
   `;
 };
 
-const autocomplete = document.querySelector('.autocomplete');
-
-createAutoComplete({
-  root: autocomplete,
+const autoCompleteConfig = {
   renderLink(movie) {
     const imgSrc = movie.Poster === 'N/A' ? '' : movie.Poster;
     return `
@@ -75,4 +72,14 @@ createAutoComplete({
     if (data.Error) return [];
     return data.Search;
   }
+};
+
+createAutoComplete({
+  ...autoCompleteConfig,
+  root: document.querySelector('#left-autocomplete')
+});
+
+createAutoComplete({
+  ...autoCompleteConfig,
+  root: document.querySelector('#right-autocomplete')
 });
