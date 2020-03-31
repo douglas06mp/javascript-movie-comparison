@@ -1,4 +1,7 @@
-const onMovieSelect = async (movie, summaryElement) => {
+let leftMovie;
+let rightMovie;
+
+const onMovieSelect = async (movie, summaryElement, side) => {
   const { data } = await axios.get('http://www.omdbapi.com/', {
     params: {
       apikey: '46fcbba6',
@@ -6,10 +9,26 @@ const onMovieSelect = async (movie, summaryElement) => {
     }
   });
   summaryElement.innerHTML = movieTemplate(data);
+
+  if (side === 'left') {
+    leftMovie = data;
+  } else {
+    rightMovie = data;
+  }
+
+  if (leftMovie && rightMovie) runComparison();
 };
 
 const movieTemplate = movieDetail => {
-  console.log(movieDetail);
+  const awards = movieDetail.Awards.split(' ').reduce((acc, next) => {
+    const value = parseInt(next);
+    return isNaN(value) ? acc : acc + value;
+  }, 0);
+  const boxOffice = +movieDetail.BoxOffice.replace(/\$/g, '').replace(/,/g, '');
+  const metascore = +movieDetail.Metascore;
+  const imdbRating = +movieDetail.imdbRating;
+  const imdbVotes = +movieDetail.imdbVotes.replace(/,/g, '');
+
   return `
     <article class="media">
       <figure class=media-left">
@@ -25,27 +44,31 @@ const movieTemplate = movieDetail => {
         </div>
       </div>
     </article>
-    <article class="notification is-primary">
+    <article data-value=${awards} class="notification is-primary">
       <p class="title">${movieDetail.Awards}</p>
       <p class="subtitle">Awards</p>
     </article>
-    <article class="notification is-primary">
+    <article data-value=${boxOffice} class="notification is-primary">
       <p class="title">${movieDetail.BoxOffice}</p>
       <p class="subtitle">Box Office</p>
     </article>
-    <article class="notification is-primary">
+    <article data-value=${metascore} class="notification is-primary">
       <p class="title">${movieDetail.Metascore}</p>
       <p class="subtitle">Metascore</p>
     </article>
-    <article class="notification is-primary">
+    <article data-value=${imdbRating} class="notification is-primary">
       <p class="title">${movieDetail.imdbRating}</p>
       <p class="subtitle">IMDB Rating</p>
     </article>
-    <article class="notification is-primary">
+    <article data-value=${imdbVotes} class="notification is-primary">
       <p class="title">${movieDetail.imdbVotes}</p>
       <p class="subtitle">IMDB Votes</p>
     </article>
   `;
+};
+
+const runComparison = () => {
+  console.log(leftMovie, rightMovie);
 };
 
 const autoCompleteConfig = {
@@ -75,7 +98,7 @@ createAutoComplete({
   ...autoCompleteConfig,
   root: document.querySelector('#left-autocomplete'),
   selectLink(movie) {
-    onMovieSelect(movie, document.querySelector('#left-summary'));
+    onMovieSelect(movie, document.querySelector('#left-summary'), 'left');
     document.querySelector('.tutorial').classList.add('is-hidden');
   }
 });
@@ -84,7 +107,7 @@ createAutoComplete({
   ...autoCompleteConfig,
   root: document.querySelector('#right-autocomplete'),
   selectLink(movie) {
-    onMovieSelect(movie, document.querySelector('#right-summary'));
+    onMovieSelect(movie, document.querySelector('#right-summary'), 'right');
     document.querySelector('.tutorial').classList.add('is-hidden');
   }
 });
