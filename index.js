@@ -58,6 +58,7 @@ const autoCompleteConfig = {
   },
   selectLink(movie) {
     onMovieSelect(movie);
+    document.querySelector('.tutorial').classList.add('is-hidden');
   },
   inputValue(movie) {
     return movie.Title;
