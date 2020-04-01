@@ -68,7 +68,41 @@ const movieTemplate = movieDetail => {
 };
 
 const runComparison = () => {
-  console.log(leftMovie, rightMovie);
+  const leftSideStats = document.querySelectorAll(
+    '#left-summary .notification'
+  );
+  const rightSideStats = document.querySelectorAll(
+    '#right-summary .notification'
+  );
+
+  leftSideStats.forEach((leftStat, idx) => {
+    const rightStat = rightSideStats[idx];
+
+    const leftSideValue = parseFloat(leftStat.dataset.value);
+    const rightSideValue = parseFloat(rightStat.dataset.value);
+    if (leftSideValue < rightSideValue) {
+      clearStyles(leftStat);
+      clearStyles(rightStat);
+      rightStat.classList.add('is-primary');
+      leftStat.classList.add('is-warning');
+    } else if (leftSideValue > rightSideValue) {
+      clearStyles(leftStat);
+      clearStyles(rightStat);
+      leftStat.classList.add('is-primary');
+      rightStat.classList.add('is-warning');
+    } else {
+      clearStyles(leftStat);
+      clearStyles(rightStat);
+      leftStat.classList.add('is-light');
+      rightStat.classList.add('is-light');
+    }
+  });
+};
+
+const clearStyles = el => {
+  el.classList.remove('is-primary');
+  el.classList.remove('is-warning');
+  el.classList.remove('is-light');
 };
 
 const autoCompleteConfig = {
