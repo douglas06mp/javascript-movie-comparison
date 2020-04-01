@@ -4,7 +4,7 @@ let rightMovie;
 const onMovieSelect = async (movie, summaryElement, side) => {
   const { data } = await axios.get('http://www.omdbapi.com/', {
     params: {
-      apikey: '46fcbba6',
+      apikey: key,
       i: movie.imdbID
     }
   });
